@@ -217,6 +217,72 @@ export default function MapBackground() {
             strokeDasharray="6 5"
           />
 
+          {/* Маршрутная линия Москва → Санкт-Петербург */}
+          <path
+            d="M 710 270 Q 695 220 680 175"
+            fill="none"
+            stroke="hsl(217,91%,70%)"
+            strokeWidth="0.8"
+            strokeOpacity="0.25"
+            strokeDasharray="5 6"
+          />
+
+          {/* Маршрутная линия Москва → Краснодар */}
+          <path
+            d="M 710 270 Q 740 370 770 440"
+            fill="none"
+            stroke="hsl(217,91%,70%)"
+            strokeWidth="0.8"
+            strokeOpacity="0.2"
+            strokeDasharray="5 6"
+          />
+
+          {/* Маршрутная линия Москва → Казань */}
+          <path
+            d="M 710 270 Q 800 265 870 255"
+            fill="none"
+            stroke="hsl(217,91%,70%)"
+            strokeWidth="0.8"
+            strokeOpacity="0.2"
+            strokeDasharray="5 6"
+          />
+
+          {/* Маршрутная линия Минск → Гродно */}
+          <path
+            d="M 471 333 Q 435 315 408 305"
+            fill="none"
+            stroke="hsl(217,91%,70%)"
+            strokeWidth="0.7"
+            strokeOpacity="0.2"
+            strokeDasharray="4 6"
+          />
+
+          {/* Город: Краснодар */}
+          <circle cx="770" cy="440" r="3" fill="hsl(217,91%,70%)" fillOpacity="0.5" />
+          <text x="770" y="430" fontSize="7" fontFamily="sans-serif" fill="hsl(217,91%,85%)" fillOpacity="0.45" textAnchor="middle">Краснодар</text>
+
+          {/* Город: Казань */}
+          <circle cx="870" cy="255" r="3" fill="hsl(217,91%,70%)" fillOpacity="0.5" />
+          <text x="870" y="245" fontSize="7" fontFamily="sans-serif" fill="hsl(217,91%,85%)" fillOpacity="0.45" textAnchor="middle">Казань</text>
+
+          {/* Город: Гродно */}
+          <circle cx="408" cy="305" r="2.5" fill="hsl(217,91%,70%)" fillOpacity="0.45" />
+          <text x="408" y="296" fontSize="6.5" fontFamily="sans-serif" fill="hsl(217,91%,85%)" fillOpacity="0.4" textAnchor="middle">Гродно</text>
+
+          {/* Город: Гомель (РБ) */}
+          <circle cx="510" cy="390" r="2.5" fill="hsl(217,91%,70%)" fillOpacity="0.45" />
+          <text x="510" y="381" fontSize="6.5" fontFamily="sans-serif" fill="hsl(217,91%,85%)" fillOpacity="0.4" textAnchor="middle">Гомель</text>
+
+          {/* Маршрутная линия Минск → Гомель */}
+          <path
+            d="M 471 333 Q 492 362 510 390"
+            fill="none"
+            stroke="hsl(217,91%,70%)"
+            strokeWidth="0.7"
+            strokeOpacity="0.18"
+            strokeDasharray="4 6"
+          />
+
           {/* Сетка (лёгкая) */}
           {[100, 200, 300, 400, 500, 600].map((y) => (
             <line
@@ -256,46 +322,42 @@ export default function MapBackground() {
               keyPoints="0;0;1;1"
               calcMode="spline"
               keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"
+              rotate="auto"
             >
               <mpath href="#flightPath" />
             </animateMotion>
 
-            {/* Корпус */}
+            {/* Корпус — нос вправо (направление движения) */}
             <path
-              d="M -14 0 C -8 -3 8 -3 14 0 C 8 3 -8 3 -14 0 Z"
+              d="M 14 0 C 8 -3 -8 -3 -14 0 C -8 3 8 3 14 0 Z"
               fill="hsl(217,91%,80%)"
               fillOpacity="0.9"
-              transform="rotate(-15)"
             />
-            {/* Крылья */}
+            {/* Крылья — растут от центра корпуса вперёд */}
             <path
-              d="M -2 0 L 6 -10 L 10 -9 L 4 0 Z"
+              d="M 2 0 L -5 -11 L -9 -10 L -3 0 Z"
               fill="hsl(217,91%,85%)"
               fillOpacity="0.85"
-              transform="rotate(-15)"
             />
             <path
-              d="M -2 0 L 6 10 L 10 9 L 4 0 Z"
+              d="M 2 0 L -5 11 L -9 10 L -3 0 Z"
               fill="hsl(217,91%,85%)"
               fillOpacity="0.85"
-              transform="rotate(-15)"
             />
-            {/* Хвост */}
+            {/* Хвостовое оперение */}
             <path
               d="M -14 0 L -10 -5 L -8 -4 L -10 0 Z"
               fill="hsl(217,91%,80%)"
               fillOpacity="0.85"
-              transform="rotate(-15)"
             />
 
-            {/* Шлейф */}
+            {/* Шлейф сзади */}
             <line
               x1="-14" y1="0" x2="-30" y2="1"
               stroke="hsl(217,91%,80%)"
               strokeWidth="1"
               strokeOpacity="0.25"
               strokeDasharray="3 3"
-              transform="rotate(-15)"
             />
           </g>
         </g>

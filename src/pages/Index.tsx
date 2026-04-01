@@ -208,7 +208,7 @@ export default function Index() {
                   </div>
                 ))}
               </div>
-              <span>10+ семей уже переехали</span>
+              <span>20+ семей уже переехали</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="flex gap-0.5">
@@ -259,7 +259,14 @@ export default function Index() {
             {steps.map((step, i) => (
               <div key={i} className="relative">
                 {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-[calc(100%+0px)] w-full h-px border-t-2 border-dashed border-primary/30 z-10" />
+                  <svg
+                    className="hidden lg:block absolute z-10 overflow-visible"
+                    style={{ top: "30px", left: "calc(100% + 3px)", width: "calc(24px)", height: "2px" }}
+                    viewBox="0 0 24 2"
+                    preserveAspectRatio="none"
+                  >
+                    <line x1="0" y1="1" x2="24" y2="1" stroke="hsl(217,91%,65%)" strokeWidth="2" strokeDasharray="4 3" strokeOpacity="0.45" />
+                  </svg>
                 )}
                 <div className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all duration-300 h-full">
                   <div className="flex items-center gap-3 mb-4">
@@ -467,18 +474,18 @@ export default function Index() {
             <div>
               <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-4">О себе</p>
               <h2 className="text-2xl md:text-4xl font-bold mb-5">
-                Сам прошёл 3 переезда, помог 10+ семьям
+                Сам прошёл 3 переезда, помог 20+ семьям
               </h2>
               <p className="text-muted-foreground leading-relaxed text-base mb-4">
-                Я переезжал из Сибири в Москву, из Москвы в Краснодар, и наконец — в Сочи. Каждый раз наступал на одни и те же грабли: неверный бюджет, незнание рынка аренды, проблемы с пропиской.
+                Я переезжал из Минска в Москву, из Москвы в Краснодар, и наконец — в Сочи. Каждый раз сталкивался с одним и тем же: неверный бюджет, незнание реального рынка аренды, путаница с документами и пропиской.
               </p>
               <p className="text-muted-foreground leading-relaxed text-base mb-6">
-                Теперь я <span className="text-foreground font-semibold">лично проверяю города</span> — еду, живу там 2-4 недели, изучаю реальный рынок аренды и труда. Только актуальные данные, никакой воды.
+                Теперь я <span className="text-foreground font-semibold">лично проверяю каждый город</span> — еду, живу там 2-4 недели, изучаю рынок аренды, труда и инфраструктуры. Помог переехать семьям из РФ и РБ в более чем 10 городов. Только актуальные данные, никакой воды.
               </p>
               <div className="flex flex-wrap gap-4">
                 {[
                   { icon: "MapPin", label: "3 личных переезда" },
-                  { icon: "Users", label: "10+ семей помог" },
+                  { icon: "Users", label: "20+ семей помог" },
                   { icon: "Search", label: "Проверяю лично" },
                 ].map((badge, i) => (
                   <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm">
