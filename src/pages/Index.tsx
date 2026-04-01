@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import MapBackground from "@/components/MapBackground";
+import IPhoneMockup from "@/components/IPhoneMockup";
 
 const problems = [
   {
@@ -164,11 +165,20 @@ export default function Index() {
       </header>
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 md:px-12 pt-20">
+      <section className="relative min-h-screen flex items-center justify-center px-6 md:px-12 pt-20 overflow-hidden">
         {/* Background — карта РБ и РФ с самолётом */}
         <MapBackground />
 
-        <div className="relative text-center max-w-4xl mx-auto">
+        {/* iPhone mockup — правый угол, виден частично */}
+        <div className="hidden xl:block absolute right-[-30px] top-1/2 -translate-y-1/2 z-10 opacity-90">
+          <IPhoneMockup />
+        </div>
+        {/* iPhone для md-lg — поменьше и правее */}
+        <div className="hidden lg:block xl:hidden absolute right-[-60px] top-1/2 -translate-y-1/2 z-10 opacity-75" style={{ transform: "translateY(-50%) scale(0.85)" }}>
+          <IPhoneMockup />
+        </div>
+
+        <div className="relative text-center max-w-4xl mx-auto xl:mr-[160px]">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8">
             <Icon name="Sparkles" size={14} />
             Персональный подбор города за 2 минуты
@@ -248,8 +258,43 @@ export default function Index() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="kak-eto-rabotaet" className="px-6 md:px-12 py-24 bg-muted/20">
-        <div className="max-w-6xl mx-auto">
+      <section id="kak-eto-rabotaet" className="relative px-6 md:px-12 py-24 bg-muted/20 overflow-hidden">
+        {/* Декоративный фон: пунктирные дуги-маршруты */}
+        <div className="absolute inset-0 pointer-events-none select-none">
+          <svg viewBox="0 0 1200 500" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="hwGlow1" cx="20%" cy="50%" r="40%">
+                <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.07" />
+                <stop offset="100%" stopColor="hsl(217,91%,60%)" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="hwGlow2" cx="80%" cy="50%" r="40%">
+                <stop offset="0%" stopColor="hsl(240,70%,65%)" stopOpacity="0.06" />
+                <stop offset="100%" stopColor="hsl(240,70%,65%)" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="1200" height="500" fill="url(#hwGlow1)" />
+            <rect width="1200" height="500" fill="url(#hwGlow2)" />
+            {/* Дуга-маршрут: шаги 1→2→3→4 */}
+            <path d="M 160 380 Q 310 120 460 250 Q 610 380 760 200 Q 910 80 1060 280"
+              fill="none" stroke="hsl(217,91%,65%)" strokeWidth="1.2" strokeOpacity="0.12" strokeDasharray="8 7" />
+            {/* Узлы-шаги */}
+            {[160, 460, 760, 1060].map((cx, i) => {
+              const cy = [380, 250, 200, 280][i];
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy={cy} r="18" fill="hsl(217,91%,60%)" fillOpacity="0.05" stroke="hsl(217,91%,65%)" strokeOpacity="0.18" strokeWidth="1" />
+                  <circle cx={cx} cy={cy} r="5" fill="hsl(217,91%,70%)" fillOpacity="0.25" />
+                </g>
+              );
+            })}
+            {/* Горизонтальные сетки */}
+            {[100, 200, 300, 400].map((y) => (
+              <line key={y} x1="0" y1={y} x2="1200" y2={y}
+                stroke="hsl(217,91%,60%)" strokeWidth="0.5" strokeOpacity="0.04" />
+            ))}
+          </svg>
+        </div>
+        <div className="max-w-6xl mx-auto relative">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Процесс</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Как это работает</h2>
@@ -294,8 +339,37 @@ export default function Index() {
       </section>
 
       {/* FILTERS */}
-      <section className="px-6 md:px-12 py-24">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative px-6 md:px-12 py-24 overflow-hidden">
+        {/* Декоративный фон: шестиугольная сетка */}
+        <div className="absolute inset-0 pointer-events-none select-none">
+          <svg viewBox="0 0 1200 500" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="filtersGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.05" />
+                <stop offset="100%" stopColor="hsl(217,91%,60%)" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="1200" height="500" fill="url(#filtersGlow)" />
+            {/* Шестиугольники декоративные */}
+            {[
+              { cx: 100, cy: 80 }, { cx: 1100, cy: 80 },
+              { cx: 80, cy: 430 }, { cx: 1120, cy: 420 },
+              { cx: 600, cy: 30 }, { cx: 200, cy: 250 }, { cx: 1000, cy: 260 },
+            ].map(({ cx, cy }, i) => {
+              const size = 28 + (i % 3) * 10;
+              const pts = Array.from({ length: 6 }, (_, k) => {
+                const a = (Math.PI / 3) * k - Math.PI / 6;
+                return `${cx + size * Math.cos(a)},${cy + size * Math.sin(a)}`;
+              }).join(" ");
+              return (
+                <polygon key={i} points={pts}
+                  fill="none" stroke="hsl(217,91%,65%)"
+                  strokeWidth="0.7" strokeOpacity={0.1 - i * 0.01} />
+              );
+            })}
+          </svg>
+        </div>
+        <div className="max-w-6xl mx-auto relative">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Критерии</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">15+ фильтров подбора</h2>
@@ -463,8 +537,55 @@ export default function Index() {
       </section>
 
       {/* ABOUT */}
-      <section className="px-6 md:px-12 py-24 bg-muted/20">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative px-6 md:px-12 py-24 bg-muted/20 overflow-hidden">
+        {/* Декоративный фон: концентрические окружности + частицы */}
+        <div className="absolute inset-0 pointer-events-none select-none">
+          <svg viewBox="0 0 1200 500" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="aboutGlow" cx="15%" cy="50%" r="45%">
+                <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.09" />
+                <stop offset="100%" stopColor="hsl(217,91%,60%)" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="aboutGlow2" cx="85%" cy="50%" r="35%">
+                <stop offset="0%" stopColor="hsl(240,60%,65%)" stopOpacity="0.05" />
+                <stop offset="100%" stopColor="hsl(240,60%,65%)" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="1200" height="500" fill="url(#aboutGlow)" />
+            <rect width="1200" height="500" fill="url(#aboutGlow2)" />
+            {/* Концентрические кольца вокруг аватара (слева) */}
+            {[60, 95, 130, 170].map((r, i) => (
+              <circle key={i} cx="200" cy="250" r={r}
+                fill="none"
+                stroke="hsl(217,91%,65%)"
+                strokeWidth="0.6"
+                strokeOpacity={0.12 - i * 0.025}
+                strokeDasharray={i % 2 === 0 ? "6 8" : "none"}
+              />
+            ))}
+            {/* Декоративные точки-города */}
+            {[
+              { cx: 300, cy: 160 }, { cx: 420, cy: 310 }, { cx: 180, cy: 380 },
+              { cx: 950, cy: 130 }, { cx: 1050, cy: 370 }, { cx: 1100, cy: 220 },
+            ].map((p, i) => (
+              <circle key={i} cx={p.cx} cy={p.cy} r="2.5"
+                fill="hsl(217,91%,70%)" fillOpacity="0.2" />
+            ))}
+            {/* Соединительные линии от центра к точкам */}
+            {[
+              [200, 250, 300, 160], [200, 250, 420, 310], [200, 250, 180, 380],
+            ].map(([x1, y1, x2, y2], i) => (
+              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke="hsl(217,91%,65%)" strokeWidth="0.6" strokeOpacity="0.1" strokeDasharray="4 6" />
+            ))}
+            {/* Текстурные горизонтали */}
+            {[100, 200, 300, 400].map((y) => (
+              <line key={y} x1="0" y1={y} x2="1200" y2={y}
+                stroke="hsl(217,91%,60%)" strokeWidth="0.4" strokeOpacity="0.04" />
+            ))}
+          </svg>
+        </div>
+        <div className="max-w-4xl mx-auto relative">
           <div className="flex flex-col md:flex-row gap-12 items-center">
             <div className="flex-shrink-0">
               <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/20">
@@ -500,8 +621,37 @@ export default function Index() {
       </section>
 
       {/* FAQ */}
-      <section className="px-6 md:px-12 py-24">
-        <div className="max-w-3xl mx-auto">
+      <section className="relative px-6 md:px-12 py-24 overflow-hidden">
+        {/* Декоративный фон: вопросительные знаки + тонкая сетка */}
+        <div className="absolute inset-0 pointer-events-none select-none">
+          <svg viewBox="0 0 1200 600" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="faqGlow" cx="50%" cy="0%" r="50%">
+                <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.06" />
+                <stop offset="100%" stopColor="hsl(217,91%,60%)" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="1200" height="600" fill="url(#faqGlow)" />
+            {/* Декоративные символы "?" */}
+            {[
+              { x: 80, y: 100, size: 48, opacity: 0.04 },
+              { x: 1100, y: 80, size: 60, opacity: 0.035 },
+              { x: 60, y: 480, size: 40, opacity: 0.03 },
+              { x: 1120, y: 500, size: 52, opacity: 0.04 },
+              { x: 200, y: 300, size: 32, opacity: 0.025 },
+              { x: 980, y: 280, size: 38, opacity: 0.03 },
+            ].map((q, i) => (
+              <text key={i} x={q.x} y={q.y} fontSize={q.size} fontFamily="system-ui, sans-serif" fontWeight="700"
+                fill="hsl(217,91%,70%)" fillOpacity={q.opacity} textAnchor="middle">?</text>
+            ))}
+            {/* Тонкие вертикальные линии */}
+            {[150, 350, 850, 1050].map((x) => (
+              <line key={x} x1={x} y1="0" x2={x} y2="600"
+                stroke="hsl(217,91%,60%)" strokeWidth="0.4" strokeOpacity="0.04" />
+            ))}
+          </svg>
+        </div>
+        <div className="max-w-3xl mx-auto relative">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">FAQ</p>
             <h2 className="text-3xl md:text-5xl font-bold">Частые вопросы</h2>
@@ -543,6 +693,34 @@ export default function Index() {
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20"
                 style={{ background: "radial-gradient(circle, white 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
+              <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full opacity-15"
+                style={{ background: "radial-gradient(circle, white 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
+              {/* Декоративные кольца */}
+              <svg viewBox="0 0 800 400" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+                {[60, 110, 160, 210].map((r, i) => (
+                  <circle key={i} cx="700" cy="200" r={r}
+                    fill="none" stroke="white" strokeWidth="0.7"
+                    strokeOpacity={0.07 - i * 0.015}
+                    strokeDasharray={i % 2 === 0 ? "8 10" : "none"} />
+                ))}
+                {[60, 110, 160].map((r, i) => (
+                  <circle key={i} cx="100" cy="200" r={r}
+                    fill="none" stroke="white" strokeWidth="0.7"
+                    strokeOpacity={0.06 - i * 0.015}
+                    strokeDasharray="5 8" />
+                ))}
+                {/* Города-точки */}
+                {[
+                  { cx: 200, cy: 100 }, { cx: 350, cy: 60 }, { cx: 500, cy: 90 },
+                  { cx: 600, cy: 300 }, { cx: 250, cy: 320 },
+                ].map((p, i) => (
+                  <circle key={i} cx={p.cx} cy={p.cy} r="3"
+                    fill="white" fillOpacity="0.15" />
+                ))}
+                {/* Маршрутные линии */}
+                <path d="M 100 200 Q 250 80 400 120 Q 550 160 700 200"
+                  fill="none" stroke="white" strokeWidth="0.8" strokeOpacity="0.1" strokeDasharray="6 8" />
+              </svg>
             </div>
             <div className="relative">
               <p className="text-primary-foreground/70 text-sm font-semibold tracking-widest uppercase mb-4">Пора действовать</p>
