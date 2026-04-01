@@ -229,3 +229,61 @@ body::before {
   background: hsl(var(--gold) / 0.4);
   border-radius: 2px;
 }
+
+/* Mobile horizontal scroll — скрываем скроллбар */
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Pulse glow animation для мобильных акцентов */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 hsl(217 91% 60% / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px hsl(217 91% 60% / 0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Плавный float для мобильной иконки */
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-float {
+  animation: floatY 3s ease-in-out infinite;
+}
+
+/* Shimmer эффект */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(217 91% 60% / 0.1) 0%,
+    hsl(217 91% 60% / 0.25) 50%,
+    hsl(217 91% 60% / 0.1) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite;
+}

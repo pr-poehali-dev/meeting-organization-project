@@ -179,7 +179,7 @@ export default function Index() {
         </div>
 
         <div className="relative text-center max-w-4xl mx-auto xl:mr-[160px]">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8 animate-pulse-glow">
             <Icon name="Sparkles" size={14} />
             Персональный подбор города за 2 минуты
           </div>
@@ -208,8 +208,52 @@ export default function Index() {
             </a>
           </div>
 
+          {/* Мобильный визуальный блок: результат подбора */}
+          <div className="lg:hidden mt-10 mx-auto max-w-sm">
+            <div className="relative rounded-2xl bg-card border border-border overflow-hidden">
+              {/* Shimmer полоса сверху */}
+              <div className="h-1 w-full animate-shimmer" />
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
+                    <Icon name="Sparkles" size={13} className="text-primary" />
+                  </div>
+                  <span className="text-xs font-semibold text-primary uppercase tracking-wider">Подбор городов</span>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { city: "Краснодар", match: 97, color: "bg-emerald-400" },
+                    { city: "Сочи", match: 84, color: "bg-blue-400" },
+                    { city: "Ставрополь", match: 71, color: "bg-amber-400" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 w-28">
+                        <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                        <span className="text-sm font-medium text-foreground">{item.city}</span>
+                      </div>
+                      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${item.color} opacity-80`}
+                          style={{ width: `${item.match}%` }}
+                        />
+                      </div>
+                      <span className="text-xs font-bold text-muted-foreground w-8 text-right">{item.match}%</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Icon name="CheckCircle2" size={11} className="text-emerald-400" />
+                    Ваши критерии: 12/15
+                  </span>
+                  <span className="text-primary font-semibold">за 2 мин ›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Social proof */}
-          <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
+          <div className="mt-10 lg:mt-14 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
                 {[
@@ -239,14 +283,15 @@ export default function Index() {
       </section>
 
       {/* PROBLEM & SOLUTION */}
-      <section className="px-6 md:px-12 py-24">
+      <section className="py-24">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 px-6 md:px-12">
             <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Решаем ваши задачи</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Что вас останавливает?</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">У каждого страха — конкретный инструмент решения</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* Desktop: сетка */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5 px-6 md:px-12">
             {problems.map((item, i) => (
               <div key={i} className={`relative p-6 rounded-2xl bg-gradient-to-br ${item.color} border border-white/5 hover:-translate-y-1 transition-all duration-300`}>
                 <div className={`w-12 h-12 rounded-xl bg-background/40 flex items-center justify-center mb-5 ${item.iconColor}`}>
@@ -259,6 +304,28 @@ export default function Index() {
                 </div>
               </div>
             ))}
+          </div>
+          {/* Mobile: горизонтальный скролл с крупными карточками */}
+          <div className="sm:hidden overflow-x-auto scroll-hide px-6">
+            <div className="flex gap-4 pb-2" style={{ width: "max-content" }}>
+              {problems.map((item, i) => (
+                <div key={i} className={`relative p-5 rounded-2xl bg-gradient-to-br ${item.color} border border-white/5 flex-shrink-0`} style={{ width: "220px" }}>
+                  <div className={`w-11 h-11 rounded-xl bg-background/40 flex items-center justify-center mb-4 ${item.iconColor}`}>
+                    <Icon name={item.icon} size={20} />
+                  </div>
+                  <p className="text-muted-foreground text-sm mb-3 leading-snug">{item.problem}</p>
+                  <div className="flex items-center gap-2">
+                    <Icon name="ArrowRight" size={13} className="text-primary flex-shrink-0" />
+                    <p className="font-bold text-foreground text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Подсказка скролла */}
+            <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground/60">
+              <Icon name="ChevronRight" size={12} />
+              <span>Листайте вправо</span>
+            </div>
           </div>
         </div>
       </section>
@@ -306,7 +373,8 @@ export default function Index() {
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Как это работает</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">Четыре шага от «не знаю куда» до «уже живу там»</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Desktop: сетка */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, i) => (
               <div key={i} className="relative">
                 {i < steps.length - 1 && (
@@ -327,6 +395,30 @@ export default function Index() {
                     <span className="text-2xl font-bold text-primary/40">{step.num}</span>
                   </div>
                   <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Mobile: вертикальный timeline */}
+          <div className="sm:hidden space-y-0">
+            {steps.map((step, i) => (
+              <div key={i} className="flex gap-4">
+                {/* Timeline линия */}
+                <div className="flex flex-col items-center">
+                  <div className="w-10 h-10 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center flex-shrink-0 animate-pulse-glow">
+                    <Icon name={step.icon} size={18} className="text-primary" />
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className="w-px flex-1 my-1" style={{ background: "linear-gradient(to bottom, hsl(217 91% 60% / 0.4), hsl(217 91% 60% / 0.05))", minHeight: "32px" }} />
+                  )}
+                </div>
+                {/* Контент */}
+                <div className="pb-6 pt-1 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold text-primary/50 tabular-nums">{step.num}</span>
+                    <h3 className="text-base font-bold">{step.title}</h3>
+                  </div>
                   <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
                 </div>
               </div>
@@ -381,18 +473,18 @@ export default function Index() {
             <h2 className="text-3xl md:text-5xl font-bold mb-4">15+ фильтров подбора</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">Учитываем всё, что важно именно вам</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {filters.map((f, i) => (
-              <div key={i} className="relative flex flex-col items-center gap-3 p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-300 cursor-default group overflow-hidden">
+              <div key={i} className="relative flex flex-col items-center gap-3 p-4 sm:p-6 rounded-2xl bg-card border border-border hover:border-primary/40 active:border-primary/60 active:bg-primary/5 transition-all duration-300 cursor-default group overflow-hidden">
                 {/* Живой градиентный фон */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${f.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 {/* Декоративные кружки */}
                 <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full ${f.dot1} blur-xl group-hover:scale-150 transition-transform duration-500`} />
                 <div className={`absolute -bottom-3 -left-3 w-12 h-12 rounded-full ${f.dot2} blur-lg group-hover:scale-150 transition-transform duration-500`} />
-                <div className="relative w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
-                  <Icon name={f.icon} size={24} className="text-primary" />
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
+                  <Icon name={f.icon} size={22} className="text-primary" />
                 </div>
-                <span className="relative text-sm font-semibold text-center">{f.label}</span>
+                <span className="relative text-xs sm:text-sm font-semibold text-center leading-tight">{f.label}</span>
               </div>
             ))}
           </div>
@@ -400,13 +492,13 @@ export default function Index() {
       </section>
 
       {/* CASE EXAMPLE */}
-      <section className="px-6 md:px-12 py-24 bg-muted/20">
+      <section className="px-4 md:px-12 py-24 bg-muted/20">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Пример</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Реальный кейс</h2>
           </div>
-          <div className="relative overflow-hidden rounded-3xl bg-card border border-border p-8 md:p-12">
+          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-card border border-border p-5 md:p-12">
             <div className="absolute top-0 right-0 w-64 h-64 rounded-full"
               style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.08) 0%, transparent 70%)" }} />
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -466,17 +558,17 @@ export default function Index() {
                   </div>
                   <div className="space-y-3">
                     {[
-                      { icon: "Home", label: "Аренда 2к квартиры", value: "35 000 ₽/мес", ok: true },
+                      { icon: "Home", label: "Аренда 2к", value: "35 000 ₽/мес", ok: true },
                       { icon: "Briefcase", label: "IT-вакансии", value: "от 70 000 ₽", ok: true },
-                      { icon: "GraduationCap", label: "Школы рядом", value: "4 в радиусе 1 км", ok: true },
-                      { icon: "Thermometer", label: "Климат", value: "Субтропический, 280 дней солнца", ok: true },
+                      { icon: "GraduationCap", label: "Школы рядом", value: "4 в 1 км", ok: true },
+                      { icon: "Thermometer", label: "Климат", value: "280 дней солнца", ok: true },
                     ].map((item, i) => (
-                      <div key={i} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Icon name={item.icon} size={13} />
-                          {item.label}
+                      <div key={i} className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
+                          <Icon name={item.icon} size={13} className="flex-shrink-0" />
+                          <span className="truncate">{item.label}</span>
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
                           <span className="text-sm font-semibold">{item.value}</span>
                           <Icon name="CheckCircle2" size={14} className="text-emerald-400" />
                         </div>
@@ -491,14 +583,15 @@ export default function Index() {
       </section>
 
       {/* TARIFFS */}
-      <section id="tarify" className="px-6 md:px-12 py-24">
+      <section id="tarify" className="py-24">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 px-6 md:px-12">
             <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Тарифы</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Выберите свой формат</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">От самостоятельного изучения до полного переезда под ключ</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* Desktop: сетка */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 px-6 md:px-12">
             {tariffs.map((t, i) => (
               <div
                 key={i}
@@ -543,6 +636,62 @@ export default function Index() {
                 </Link>
               </div>
             ))}
+          </div>
+          {/* Mobile: горизонтальный скролл тарифов */}
+          <div className="md:hidden overflow-x-auto scroll-hide px-6">
+            <div className="flex gap-4 pb-2" style={{ width: "max-content" }}>
+              {tariffs.map((t, i) => (
+                <div
+                  key={i}
+                  className={`relative flex flex-col rounded-2xl border transition-all duration-300 flex-shrink-0 ${
+                    t.highlight
+                      ? "bg-primary border-primary shadow-2xl shadow-primary/20"
+                      : "bg-card border-border"
+                  }`}
+                  style={{ width: "260px" }}
+                >
+                  {t.highlight && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 bg-amber-400 text-background text-xs font-bold rounded-full tracking-wide whitespace-nowrap">
+                      ПОПУЛЯРНЫЙ
+                    </div>
+                  )}
+                  <div className="p-6 pb-0">
+                    <p className={`text-xs font-semibold mb-1 ${t.highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{t.name}</p>
+                    <div className={`text-3xl font-bold mb-2 ${t.highlight ? "text-primary-foreground" : "text-foreground"}`}>{t.price}</div>
+                    <p className={`text-sm leading-relaxed ${t.highlight ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{t.desc}</p>
+                  </div>
+                  <ul className="space-y-2.5 flex-1 px-6 py-4">
+                    {t.features.map((f, fi) => (
+                      <li key={fi} className="flex items-start gap-2 text-sm">
+                        <Icon
+                          name="Check"
+                          size={14}
+                          className={`flex-shrink-0 mt-0.5 ${t.highlight ? "text-primary-foreground" : "text-primary"}`}
+                        />
+                        <span className={t.highlight ? "text-primary-foreground" : "text-foreground"}>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="px-6 pb-6">
+                    <Link
+                      to="/anketa"
+                      className={`inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
+                        t.highlight
+                          ? "bg-primary-foreground text-primary"
+                          : "bg-primary/15 text-primary"
+                      }`}
+                    >
+                      {t.cta}
+                      <Icon name="ArrowRight" size={13} />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground/60">
+              <Icon name="ChevronRight" size={12} />
+              <span>Листайте вправо</span>
+            </div>
           </div>
         </div>
       </section>
@@ -597,10 +746,24 @@ export default function Index() {
           </svg>
         </div>
         <div className="max-w-4xl mx-auto relative">
-          <div className="flex flex-col md:flex-row gap-12 items-center">
-            <div className="flex-shrink-0">
-              <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/20">
-                <Icon name="User" size={60} className="text-primary/60" />
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+            {/* Аватар + мобильная метрика */}
+            <div className="flex-shrink-0 flex flex-col items-center gap-4">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/20 animate-float">
+                <Icon name="User" size={52} className="text-primary/60" />
+              </div>
+              {/* Мобильные мини-метрики под аватаром */}
+              <div className="flex gap-3 md:hidden">
+                {[
+                  { value: "3", label: "переезда" },
+                  { value: "20+", label: "семей" },
+                  { value: "10+", label: "городов" },
+                ].map((m, i) => (
+                  <div key={i} className="flex flex-col items-center px-3 py-2 rounded-xl bg-card border border-border text-center">
+                    <span className="text-lg font-bold text-primary">{m.value}</span>
+                    <span className="text-xs text-muted-foreground">{m.label}</span>
+                  </div>
+                ))}
               </div>
             </div>
             <div>
@@ -614,14 +777,14 @@ export default function Index() {
               <p className="text-muted-foreground leading-relaxed text-base mb-6">
                 Теперь я <span className="text-foreground font-semibold">лично проверяю каждый город</span> — еду, живу там 2-4 недели, изучаю рынок аренды, труда и инфраструктуры. Помог переехать семьям из РФ и РБ в более чем 10 городов. Только актуальные данные, никакой воды.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3">
                 {[
                   { icon: "MapPin", label: "3 личных переезда" },
                   { icon: "Users", label: "20+ семей помог" },
                   { icon: "Search", label: "Проверяю лично" },
                 ].map((badge, i) => (
-                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm">
-                    <Icon name={badge.icon} size={14} className="text-primary" />
+                  <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-sm">
+                    <Icon name={badge.icon} size={13} className="text-primary" />
                     <span className="font-medium">{badge.label}</span>
                   </div>
                 ))}
@@ -698,9 +861,9 @@ export default function Index() {
       </section>
 
       {/* CTA BANNER */}
-      <section className="px-6 md:px-12 py-24">
+      <section className="px-4 md:px-12 py-16 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="relative overflow-hidden rounded-3xl p-12 md:p-16 bg-primary">
+          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl p-8 md:p-16 bg-primary">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20"
                 style={{ background: "radial-gradient(circle, white 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
@@ -734,18 +897,26 @@ export default function Index() {
               </svg>
             </div>
             <div className="relative">
-              <p className="text-primary-foreground/70 text-sm font-semibold tracking-widest uppercase mb-4">Пора действовать</p>
-              <h2 className="text-3xl md:text-5xl font-bold text-primary-foreground mb-6 leading-tight">
+              <p className="text-primary-foreground/70 text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">Пора действовать</p>
+              <h2 className="text-2xl md:text-5xl font-bold text-primary-foreground mb-4 md:mb-6 leading-tight">
                 Готовы найти свой город?
               </h2>
-              <p className="text-primary-foreground/80 text-lg mb-10 max-w-xl mx-auto">
+              <p className="text-primary-foreground/80 text-base md:text-lg mb-7 md:mb-10 max-w-xl mx-auto">
                 Заполните анкету за 2 минуты и получите 3 лучших города под ваши критерии
               </p>
+              {/* Города-чипсы для мобилки */}
+              <div className="flex flex-wrap justify-center gap-2 mb-6 md:hidden">
+                {["Краснодар", "Сочи", "Казань", "Новосибирск", "Екатеринбург"].map((city, i) => (
+                  <span key={i} className="px-3 py-1 rounded-full bg-white/15 text-primary-foreground/90 text-xs font-medium border border-white/20">
+                    {city}
+                  </span>
+                ))}
+              </div>
               <Link
                 to="/anketa"
-                className="inline-flex items-center gap-2 px-10 py-4 bg-primary-foreground text-primary font-bold rounded-xl hover:bg-primary-foreground/90 transition-all duration-200 text-base hover:-translate-y-0.5 shadow-xl"
+                className="inline-flex items-center gap-2 px-8 md:px-10 py-3.5 md:py-4 bg-primary-foreground text-primary font-bold rounded-xl hover:bg-primary-foreground/90 transition-all duration-200 text-sm md:text-base hover:-translate-y-0.5 shadow-xl"
               >
-                <Icon name="ClipboardList" size={18} />
+                <Icon name="ClipboardList" size={16} />
                 Заполнить анкету
               </Link>
             </div>
@@ -754,8 +925,8 @@ export default function Index() {
       </section>
 
       {/* FOOTER */}
-      <footer className="px-6 md:px-12 py-12 border-t border-border">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <footer className="px-6 md:px-12 py-10 md:py-12 border-t border-border">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5 md:gap-6">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <Icon name="MapPin" size={13} className="text-primary-foreground" />
