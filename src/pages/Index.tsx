@@ -63,14 +63,14 @@ const steps = [
 ];
 
 const filters = [
-  { icon: "Building2", label: "Размер города" },
-  { icon: "Sun", label: "Климат" },
-  { icon: "Mountain", label: "География" },
-  { icon: "Briefcase", label: "Работа" },
-  { icon: "Key", label: "Жильё" },
-  { icon: "Users", label: "Семья" },
-  { icon: "Leaf", label: "Экология" },
-  { icon: "Music", label: "Досуг" },
+  { icon: "Building2", label: "Размер города",  glow: "from-blue-500/20 via-blue-400/5 to-transparent",   dot1: "bg-blue-400/20",   dot2: "bg-blue-500/10" },
+  { icon: "Sun",       label: "Климат",          glow: "from-amber-400/20 via-amber-300/5 to-transparent",  dot1: "bg-amber-300/20",  dot2: "bg-orange-400/10" },
+  { icon: "Mountain",  label: "География",       glow: "from-teal-500/20 via-teal-400/5 to-transparent",    dot1: "bg-teal-400/20",   dot2: "bg-emerald-500/10" },
+  { icon: "Briefcase", label: "Работа",          glow: "from-violet-500/20 via-violet-400/5 to-transparent",dot1: "bg-violet-400/20", dot2: "bg-purple-500/10" },
+  { icon: "Key",       label: "Жильё",           glow: "from-rose-500/20 via-rose-400/5 to-transparent",    dot1: "bg-rose-400/20",   dot2: "bg-pink-500/10" },
+  { icon: "Users",     label: "Семья",           glow: "from-cyan-500/20 via-cyan-400/5 to-transparent",    dot1: "bg-cyan-400/20",   dot2: "bg-sky-500/10" },
+  { icon: "Leaf",      label: "Экология",        glow: "from-green-500/20 via-green-400/5 to-transparent",  dot1: "bg-green-400/20",  dot2: "bg-lime-500/10" },
+  { icon: "Music",     label: "Досуг",           glow: "from-fuchsia-500/20 via-fuchsia-400/5 to-transparent", dot1: "bg-fuchsia-400/20", dot2: "bg-pink-400/10" },
 ];
 
 const tariffs = [
@@ -212,9 +212,15 @@ export default function Index() {
           <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
-                {["👨", "👩", "👨‍👩‍👧"].map((emoji, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-sm">
-                    {emoji}
+                {[
+                  "https://cdn.poehali.dev/projects/c6fc9b21-8d42-41de-b0e8-16f48a4ad407/files/c6578486-fdbd-4286-bb6c-8ba9f80d0e6c.jpg",
+                  "https://cdn.poehali.dev/projects/c6fc9b21-8d42-41de-b0e8-16f48a4ad407/files/75b6d5cd-2b6c-417a-ad7c-68113cf70a16.jpg",
+                  "https://cdn.poehali.dev/projects/c6fc9b21-8d42-41de-b0e8-16f48a4ad407/files/8e21551e-1ba7-4cfd-8dfb-7f93710032a3.jpg",
+                  "https://cdn.poehali.dev/projects/c6fc9b21-8d42-41de-b0e8-16f48a4ad407/files/031af1f1-0e44-4721-bc70-f54064c5afc2.jpg",
+                  "https://cdn.poehali.dev/projects/c6fc9b21-8d42-41de-b0e8-16f48a4ad407/files/0243e0c9-79f3-405b-9d58-3e79e09ca6ed.jpg",
+                ].map((src, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-background overflow-hidden">
+                    <img src={src} alt="client" className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
@@ -377,11 +383,16 @@ export default function Index() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {filters.map((f, i) => (
-              <div key={i} className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-card border border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 cursor-default group">
-                <div className="w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
+              <div key={i} className="relative flex flex-col items-center gap-3 p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-300 cursor-default group overflow-hidden">
+                {/* Живой градиентный фон */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${f.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                {/* Декоративные кружки */}
+                <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full ${f.dot1} blur-xl group-hover:scale-150 transition-transform duration-500`} />
+                <div className={`absolute -bottom-3 -left-3 w-12 h-12 rounded-full ${f.dot2} blur-lg group-hover:scale-150 transition-transform duration-500`} />
+                <div className="relative w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
                   <Icon name={f.icon} size={24} className="text-primary" />
                 </div>
-                <span className="text-sm font-semibold text-center">{f.label}</span>
+                <span className="relative text-sm font-semibold text-center">{f.label}</span>
               </div>
             ))}
           </div>
