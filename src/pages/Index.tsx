@@ -1,203 +1,458 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
-const services = [
+const problems = [
+  {
+    icon: "MapPin",
+    problem: "Не знаю какой город",
+    solution: "15+ фильтров подбора",
+    color: "from-blue-500/20 to-blue-600/5",
+    iconColor: "text-blue-400",
+  },
+  {
+    icon: "Wallet",
+    problem: "Боюсь не хватить денег",
+    solution: "Калькулятор бюджета",
+    color: "from-emerald-500/20 to-emerald-600/5",
+    iconColor: "text-emerald-400",
+  },
+  {
+    icon: "Briefcase",
+    problem: "Нет работы и жилья",
+    solution: "Подбор вакансий и аренды",
+    color: "from-amber-500/20 to-amber-600/5",
+    iconColor: "text-amber-400",
+  },
+  {
+    icon: "FileText",
+    problem: "Страшно оформлять документы",
+    solution: "Чек-лист и сопровождение",
+    color: "from-rose-500/20 to-rose-600/5",
+    iconColor: "text-rose-400",
+  },
+];
+
+const steps = [
   {
     num: "01",
-    title: "Стратегия",
-    desc: "Глубокий анализ рынка и позиционирование бренда. Разрабатываем дорожную карту роста с чёткими KPI.",
-    icon: "Compass",
+    title: "Анкета",
+    desc: "2 минуты — заполняете параметры: бюджет, работа, климат, размер города",
+    icon: "ClipboardList",
   },
   {
     num: "02",
-    title: "Дизайн",
-    desc: "Визуальные системы, которые запоминаются. От логотипа до полного brand identity с детальным гайдлайном.",
-    icon: "Layers",
+    title: "Подбор городов",
+    desc: "Алгоритм находит 3 лучших варианта под ваши критерии",
+    icon: "Search",
   },
   {
     num: "03",
-    title: "Разработка",
-    desc: "Сайты и приложения с безупречным кодом. Производительность, доступность и масштабируемость в каждом проекте.",
-    icon: "Code2",
+    title: "План переезда",
+    desc: "Готовый план с жильём, работой, маршрутом и чек-листом документов",
+    icon: "Map",
   },
   {
     num: "04",
-    title: "Продвижение",
-    desc: "Комплексный digital-маркетинг: SEO, контент, таргетированная реклама — всё в единой экосистеме.",
-    icon: "TrendingUp",
+    title: "Переезд под ключ",
+    desc: "Полное сопровождение: билеты, бронь, юрист, регистрация",
+    icon: "Home",
   },
 ];
 
-const team = [
-  { name: "Алексей Ромов", role: "Арт-директор", exp: "12 лет" },
-  { name: "Мария Светлова", role: "Lead Developer", exp: "9 лет" },
-  { name: "Дмитрий Карин", role: "Стратег", exp: "11 лет" },
-  { name: "Ольга Дель", role: "UX/UI Designer", exp: "7 лет" },
+const filters = [
+  { icon: "Building2", label: "Размер города" },
+  { icon: "Sun", label: "Климат" },
+  { icon: "Mountain", label: "География" },
+  { icon: "Briefcase", label: "Работа" },
+  { icon: "Key", label: "Жильё" },
+  { icon: "Users", label: "Семья" },
+  { icon: "Leaf", label: "Экология" },
+  { icon: "Music", label: "Досуг" },
 ];
 
-const marqueeWords = [
-  "Стратегия", "·", "Дизайн", "·", "Разработка", "·", "Брендинг", "·",
-  "Маркетинг", "·", "Аналитика", "·", "Стратегия", "·", "Дизайн", "·",
-  "Разработка", "·", "Брендинг", "·", "Маркетинг", "·", "Аналитика", "·",
+const tariffs = [
+  {
+    name: "Базовый",
+    price: "990₽",
+    desc: "Для тех, кто хочет самостоятельно изучить варианты",
+    features: [
+      "Доступ к базе городов",
+      "Фильтры подбора",
+      "Базовые характеристики",
+      "Обновления базы",
+    ],
+    cta: "Начать",
+    highlight: false,
+  },
+  {
+    name: "Эксперт",
+    price: "4 900₽",
+    desc: "Полный анализ и готовый план для вашей семьи",
+    features: [
+      "Подбор города под анкету",
+      "Поиск жилья в аренду",
+      "Подбор вакансий",
+      "Чек-лист документов",
+      "Консультация 60 мин",
+    ],
+    cta: "Выбрать Эксперт",
+    highlight: true,
+  },
+  {
+    name: "VIP",
+    price: "от 25 000₽",
+    desc: "Полный переезд под ключ с личным куратором",
+    features: [
+      "Всё из Эксперта",
+      "Покупка и бронь билетов",
+      "Бронирование жилья",
+      "Юридическое сопровождение",
+      "Регистрация по месту жительства",
+      "Поддержка 24/7",
+    ],
+    cta: "Обсудить VIP",
+    highlight: false,
+  },
 ];
 
-const stats = [
-  { value: "140+", label: "проектов" },
-  { value: "8", label: "лет на рынке" },
-  { value: "96%", label: "клиентов возвращаются" },
-  { value: "3×", label: "средний рост" },
+const faqs = [
+  {
+    q: "Что если я передумаю?",
+    a: "Базовый тариф не имеет срока — пользуйтесь, когда будете готовы. По тарифу Эксперт возвращаем 100% оплаты в течение 3 дней после покупки.",
+  },
+  {
+    q: "Вы работаете только по России?",
+    a: "Основная база — города РФ. По запросу подбираем варианты в Беларуси, Казахстане и других странах СНГ. Зарубежные переезды — в рамках VIP-сопровождения.",
+  },
+  {
+    q: "Сколько ждать результата?",
+    a: "После заполнения анкеты подборка 3 городов приходит в течение 24 часов. Полный план переезда — 2-3 рабочих дня.",
+  },
+  {
+    q: "Помогаете с трудоустройством?",
+    a: "Да, в тарифах Эксперт и VIP — отбираем актуальные вакансии под вашу специальность и желаемую зарплату в выбранном городе.",
+  },
+  {
+    q: "Как с вами связаться?",
+    a: "Напишите на email или в Telegram — отвечаем в течение 2 часов в рабочее время. Кнопки связи в футере страницы.",
+  },
 ];
 
 export default function Index() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* NAV */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-5 flex items-center justify-between"
-        style={{ background: "linear-gradient(to bottom, hsl(20 10% 6% / 0.95), transparent)" }}>
-        <a href="#" className="font-cormorant text-2xl font-semibold tracking-widest text-gold">
-          FORMA
-        </a>
-        <div className="hidden md:flex items-center gap-8 text-sm font-golos text-muted-foreground">
-          {["Услуги", "О нас", "Проекты", "Команда", "Контакт"].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`}
-              className="hover-line hover:text-foreground transition-colors duration-200">
-              {item}
-            </a>
-          ))}
-        </div>
-        <a href="#контакт"
-          className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium border border-[hsl(var(--gold)/0.5)] text-gold hover:bg-[hsl(var(--gold)/0.08)] transition-all duration-300 rounded-sm">
-          Связаться
-          <Icon name="ArrowUpRight" size={14} />
-        </a>
-        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-foreground">
-          <Icon name={menuOpen ? "X" : "Menu"} size={22} />
-        </button>
-      </nav>
 
-      {/* MOBILE MENU */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-background/98 flex flex-col items-center justify-center gap-8 text-2xl font-cormorant">
-          {["Услуги", "О нас", "Проекты", "Команда", "Контакт"].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`}
-              onClick={() => setMenuOpen(false)}
-              className="text-foreground hover:text-gold transition-colors">
-              {item}
-            </a>
-          ))}
+      {/* HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 flex items-center justify-between border-b border-border/40 bg-background/90 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <Icon name="MapPin" size={16} className="text-primary-foreground" />
+          </div>
+          <span className="font-bold text-lg text-foreground tracking-tight">ПереездPro</span>
         </div>
-      )}
+        <Link
+          to="/anketa"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25"
+        >
+          Начать подбор
+          <Icon name="ArrowRight" size={14} />
+        </Link>
+      </header>
 
       {/* HERO */}
-      <section className="relative min-h-screen flex flex-col justify-end pb-20 px-6 md:px-12 pt-32">
-        {/* Background mesh */}
+      <section className="relative min-h-screen flex items-center justify-center px-6 md:px-12 pt-20">
+        {/* Background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-10%] right-[-5%] w-[60vw] h-[60vw] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(42 60% 60% / 0.06) 0%, transparent 70%)" }} />
-          <div className="absolute bottom-[10%] left-[-10%] w-[40vw] h-[40vw] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(42 60% 60% / 0.04) 0%, transparent 70%)" }} />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-4xl rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.07) 0%, transparent 70%)" }} />
+          <div className="absolute bottom-0 left-0 right-0 h-32"
+            style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--background)))" }} />
         </div>
 
-        <div className="relative max-w-6xl">
-          <div className="animate-fade-up delay-100 text-xs font-golos tracking-[0.3em] text-muted-foreground uppercase mb-6">
-            Digital Agency — Москва
+        <div className="relative text-center max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8">
+            <Icon name="Sparkles" size={14} />
+            Персональный подбор города за 2 минуты
           </div>
-          <h1 className="font-cormorant text-[clamp(4rem,10vw,9rem)] leading-[0.92] font-light tracking-tight mb-8">
-            <span className="block animate-fade-up delay-200">Создаём</span>
-            <span className="block animate-fade-up delay-300 text-gold italic">цифровые</span>
-            <span className="block animate-fade-up delay-400">продукты</span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight mb-6">
+            Переезд без хаоса.{" "}
+            <span className="text-primary">Найдем город</span>{" "}
+            под ваш бюджет, работу и образ жизни
           </h1>
-          <div className="animate-fade-up delay-500 flex flex-col md:flex-row md:items-end gap-8 md:gap-16">
-            <p className="text-muted-foreground font-golos text-base md:text-lg leading-relaxed max-w-md">
-              Мы превращаем сложные задачи в элегантные решения. Стратегия, дизайн и технологии
-              в едином процессе.
-            </p>
-            <div className="flex gap-4">
-              <a href="#услуги"
-                className="px-7 py-3.5 bg-[hsl(var(--gold))] text-background text-sm font-medium font-golos hover:bg-[hsl(var(--gold-light))] transition-all duration-300 rounded-sm">
-                Наши услуги
-              </a>
-              <a href="#контакт"
-                className="px-7 py-3.5 border border-border text-foreground text-sm font-medium font-golos hover:border-[hsl(var(--gold)/0.5)] transition-all duration-300 rounded-sm">
-                Обсудить проект
-              </a>
-            </div>
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+            Отвечаете на вопросы — получаете 3 города с готовым планом переезда: жильё, работа, документы, маршрут.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/anketa"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-base font-bold rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
+            >
+              <Icon name="ClipboardList" size={18} />
+              Заполнить анкету за 2 минуты
+            </Link>
+            <a
+              href="#kak-eto-rabotaet"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-border text-foreground text-base font-semibold rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-all duration-200"
+            >
+              Как это работает
+              <Icon name="ChevronDown" size={16} />
+            </a>
           </div>
-        </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 right-12 hidden md:flex flex-col items-center gap-2 animate-fade-in delay-1200">
-          <span className="text-xs tracking-widest text-muted-foreground rotate-90 mb-4">SCROLL</span>
-          <div className="w-px h-16 bg-border relative overflow-hidden">
-            <div className="absolute top-0 w-full bg-gold animate-[scrollLine_2s_ease-in-out_infinite]"
-              style={{ height: "40%", animation: "scrollLine 2s ease-in-out infinite" }} />
+          {/* Social proof */}
+          <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {["👨", "👩", "👨‍👩‍👧"].map((emoji, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-sm">
+                    {emoji}
+                  </div>
+                ))}
+              </div>
+              <span>10+ семей уже переехали</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Icon key={i} name="Star" size={14} className="text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+              <span>5.0 средняя оценка</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* MARQUEE */}
-      <div className="border-y border-border py-4 overflow-hidden">
-        <div className="flex animate-marquee">
-          {marqueeWords.map((w, i) => (
-            <span key={i}
-              className={`mx-4 text-sm font-golos tracking-widest uppercase ${w === "·" ? "text-gold" : "text-muted-foreground"}`}>
-              {w}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* STATS */}
-      <section className="px-6 md:px-12 py-20">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((s, i) => (
-            <div key={i} className="text-center md:text-left">
-              <div className="font-cormorant text-5xl md:text-6xl font-light text-gold mb-1">{s.value}</div>
-              <div className="text-sm text-muted-foreground font-golos tracking-wide">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* DIVIDER */}
-      <div className="px-6 md:px-12">
-        <div className="max-w-6xl mx-auto h-px bg-border" />
-      </div>
-
-      {/* SERVICES */}
-      <section id="услуги" className="px-6 md:px-12 py-24">
+      {/* PROBLEM & SOLUTION */}
+      <section className="px-6 md:px-12 py-24">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <p className="text-xs font-golos tracking-[0.3em] text-muted-foreground uppercase mb-3">Что мы делаем</p>
-              <h2 className="font-cormorant text-5xl md:text-6xl font-light">Услуги</h2>
-            </div>
-            <p className="text-muted-foreground font-golos max-w-xs leading-relaxed">
-              Полный цикл создания цифровых продуктов — от идеи до масштабирования.
-            </p>
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Решаем ваши задачи</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Что вас останавливает?</h2>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">У каждого страха — конкретный инструмент решения</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-px bg-border">
-            {services.map((s) => (
-              <div key={s.num}
-                className="card-hover bg-background p-8 md:p-10 group cursor-pointer border border-transparent">
-                <div className="flex items-start justify-between mb-8">
-                  <span className="text-xs font-golos tracking-widest text-muted-foreground">{s.num}</span>
-                  <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center
-                    group-hover:border-[hsl(var(--gold)/0.5)] group-hover:bg-[hsl(var(--gold)/0.06)] transition-all duration-300">
-                    <Icon name={s.icon} size={16} className="text-muted-foreground group-hover:text-gold transition-colors" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {problems.map((item, i) => (
+              <div key={i} className={`relative p-6 rounded-2xl bg-gradient-to-br ${item.color} border border-white/5 hover:-translate-y-1 transition-all duration-300`}>
+                <div className={`w-12 h-12 rounded-xl bg-background/40 flex items-center justify-center mb-5 ${item.iconColor}`}>
+                  <Icon name={item.icon} size={22} />
+                </div>
+                <p className="text-muted-foreground text-sm mb-3 leading-snug">{item.problem}</p>
+                <div className="flex items-center gap-2">
+                  <Icon name="ArrowRight" size={14} className="text-primary flex-shrink-0" />
+                  <p className="font-bold text-foreground text-sm">{item.solution}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="kak-eto-rabotaet" className="px-6 md:px-12 py-24 bg-muted/20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Процесс</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Как это работает</h2>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">Четыре шага от «не знаю куда» до «уже живу там»</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((step, i) => (
+              <div key={i} className="relative">
+                {i < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-8 left-[calc(100%+0px)] w-full h-px border-t-2 border-dashed border-primary/30 z-10" />
+                )}
+                <div className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all duration-300 h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                      <Icon name={step.icon} size={18} className="text-primary" />
+                    </div>
+                    <span className="text-2xl font-bold text-primary/40">{step.num}</span>
+                  </div>
+                  <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-12">
+            <Link
+              to="/anketa"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25 hover:-translate-y-0.5"
+            >
+              Начать прямо сейчас
+              <Icon name="ArrowRight" size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FILTERS */}
+      <section className="px-6 md:px-12 py-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Критерии</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">15+ фильтров подбора</h2>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">Учитываем всё, что важно именно вам</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {filters.map((f, i) => (
+              <div key={i} className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-card border border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 cursor-default group">
+                <div className="w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
+                  <Icon name={f.icon} size={24} className="text-primary" />
+                </div>
+                <span className="text-sm font-semibold text-center">{f.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CASE EXAMPLE */}
+      <section className="px-6 md:px-12 py-24 bg-muted/20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Пример</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Реальный кейс</h2>
+          </div>
+          <div className="relative overflow-hidden rounded-3xl bg-card border border-border p-8 md:p-12">
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full"
+              style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.08) 0%, transparent 70%)" }} />
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Input */}
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                    <Icon name="Users" size={18} className="text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-bold">Семья: 3 человека</p>
+                    <p className="text-sm text-muted-foreground">2 взрослых + ребёнок 7 лет</p>
                   </div>
                 </div>
-                <h3 className="font-cormorant text-3xl md:text-4xl font-light mb-4 group-hover:text-gold transition-colors duration-300">
-                  {s.title}
-                </h3>
-                <p className="text-muted-foreground font-golos text-sm leading-relaxed">{s.desc}</p>
-                <div className="mt-8 flex items-center gap-2 text-xs font-golos tracking-widest text-muted-foreground
-                  group-hover:text-gold transition-colors duration-300">
-                  Подробнее <Icon name="ArrowRight" size={12} />
+                <div className="space-y-3">
+                  {[
+                    { icon: "Wallet", label: "Бюджет на переезд", value: "200 000 ₽" },
+                    { icon: "Sun", label: "Климат", value: "Тёплый, юг" },
+                    { icon: "Laptop", label: "Работа", value: "IT-специальность" },
+                    { icon: "Home", label: "Аренда", value: "до 40 000 ₽/мес" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0">
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <Icon name={item.icon} size={14} />
+                        {item.label}
+                      </div>
+                      <span className="font-semibold text-sm">{item.value}</span>
+                    </div>
+                  ))}
                 </div>
+              </div>
+
+              {/* Output */}
+              <div>
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="flex-1 h-px bg-border" />
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/15 text-primary text-sm font-bold">
+                    <Icon name="Sparkles" size={14} />
+                    Результат
+                  </div>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+                <div className="p-6 rounded-2xl bg-primary/10 border border-primary/30">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
+                      <Icon name="MapPin" size={20} className="text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">Краснодар</p>
+                      <div className="flex gap-1 mt-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Icon key={i} name="Star" size={12} className="text-amber-400 fill-amber-400" />
+                        ))}
+                        <span className="text-xs text-muted-foreground ml-1">Лучшее совпадение</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { icon: "Home", label: "Аренда 2к квартиры", value: "35 000 ₽/мес", ok: true },
+                      { icon: "Briefcase", label: "IT-вакансии", value: "от 70 000 ₽", ok: true },
+                      { icon: "GraduationCap", label: "Школы рядом", value: "4 в радиусе 1 км", ok: true },
+                      { icon: "Thermometer", label: "Климат", value: "Субтропический, 280 дней солнца", ok: true },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Icon name={item.icon} size={13} />
+                          {item.label}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm font-semibold">{item.value}</span>
+                          <Icon name="CheckCircle2" size={14} className="text-emerald-400" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TARIFFS */}
+      <section id="tarify" className="px-6 md:px-12 py-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">Тарифы</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Выберите свой формат</h2>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">От самостоятельного изучения до полного переезда под ключ</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {tariffs.map((t, i) => (
+              <div
+                key={i}
+                className={`relative flex flex-col p-8 rounded-2xl border transition-all duration-300 ${
+                  t.highlight
+                    ? "bg-primary border-primary shadow-2xl shadow-primary/20 scale-[1.02]"
+                    : "bg-card border-border hover:border-primary/40"
+                }`}
+              >
+                {t.highlight && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-amber-400 text-background text-xs font-bold rounded-full tracking-wide">
+                    ПОПУЛЯРНЫЙ
+                  </div>
+                )}
+                <div className="mb-6">
+                  <p className={`text-sm font-semibold mb-1 ${t.highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{t.name}</p>
+                  <div className={`text-4xl font-bold mb-3 ${t.highlight ? "text-primary-foreground" : "text-foreground"}`}>{t.price}</div>
+                  <p className={`text-sm leading-relaxed ${t.highlight ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{t.desc}</p>
+                </div>
+                <ul className="space-y-3 mb-8 flex-1">
+                  {t.features.map((f, fi) => (
+                    <li key={fi} className="flex items-start gap-2.5 text-sm">
+                      <Icon
+                        name="Check"
+                        size={15}
+                        className={`flex-shrink-0 mt-0.5 ${t.highlight ? "text-primary-foreground" : "text-primary"}`}
+                      />
+                      <span className={t.highlight ? "text-primary-foreground" : "text-foreground"}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/anketa"
+                  className={`inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200 ${
+                    t.highlight
+                      ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                      : "bg-primary/15 text-primary hover:bg-primary/25"
+                  }`}
+                >
+                  {t.cta}
+                  <Icon name="ArrowRight" size={14} />
+                </Link>
               </div>
             ))}
           </div>
@@ -205,70 +460,73 @@ export default function Index() {
       </section>
 
       {/* ABOUT */}
-      <section id="о нас" className="px-6 md:px-12 py-24 bg-card">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-xs font-golos tracking-[0.3em] text-muted-foreground uppercase mb-3">О студии</p>
-            <h2 className="font-cormorant text-5xl md:text-6xl font-light leading-tight mb-8">
-              Мы думаем<br /><em className="text-gold">стратегически,</em><br />создаём красиво
-            </h2>
-            <p className="text-muted-foreground font-golos leading-relaxed mb-6">
-              FORMA — это команда стратегов, дизайнеров и разработчиков, которые верят: хороший продукт начинается
-              с глубокого понимания бизнеса клиента и его аудитории.
-            </p>
-            <p className="text-muted-foreground font-golos leading-relaxed mb-10">
-              Мы не делаем шаблонные решения. Каждый проект — это уникальная система, собранная под конкретные цели.
-            </p>
-            <a href="#контакт"
-              className="inline-flex items-center gap-2 text-gold font-golos text-sm tracking-wide hover-line">
-              Начать сотрудничество <Icon name="ArrowUpRight" size={14} />
-            </a>
-          </div>
-          <div className="relative">
-            <div className="aspect-[4/5] rounded-sm overflow-hidden bg-muted relative">
-              <div className="absolute inset-0"
-                style={{ background: "linear-gradient(135deg, hsl(20 10% 12%) 0%, hsl(20 10% 8%) 100%)" }} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="font-cormorant text-8xl font-light text-[hsl(var(--gold)/0.15)] mb-4">F</div>
-                  <div className="text-xs font-golos tracking-[0.4em] text-muted-foreground uppercase">Est. 2016</div>
-                </div>
+      <section className="px-6 md:px-12 py-24 bg-muted/20">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-12 items-center">
+            <div className="flex-shrink-0">
+              <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/20">
+                <Icon name="User" size={60} className="text-primary/60" />
               </div>
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-background border border-border p-5 rounded-sm">
-              <div className="font-cormorant text-3xl font-light text-gold">8</div>
-              <div className="text-xs font-golos text-muted-foreground mt-1">лет опыта</div>
-            </div>
-            <div className="absolute -top-6 -right-6 bg-background border border-border p-5 rounded-sm">
-              <div className="font-cormorant text-3xl font-light text-gold">140+</div>
-              <div className="text-xs font-golos text-muted-foreground mt-1">проектов</div>
+            <div>
+              <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-4">О себе</p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-5">
+                Сам прошёл 3 переезда, помог 10+ семьям
+              </h2>
+              <p className="text-muted-foreground leading-relaxed text-base mb-4">
+                Я переезжал из Сибири в Москву, из Москвы в Краснодар, и наконец — в Сочи. Каждый раз наступал на одни и те же грабли: неверный бюджет, незнание рынка аренды, проблемы с пропиской.
+              </p>
+              <p className="text-muted-foreground leading-relaxed text-base mb-6">
+                Теперь я <span className="text-foreground font-semibold">лично проверяю города</span> — еду, живу там 2-4 недели, изучаю реальный рынок аренды и труда. Только актуальные данные, никакой воды.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                {[
+                  { icon: "MapPin", label: "3 личных переезда" },
+                  { icon: "Users", label: "10+ семей помог" },
+                  { icon: "Search", label: "Проверяю лично" },
+                ].map((badge, i) => (
+                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm">
+                    <Icon name={badge.icon} size={14} className="text-primary" />
+                    <span className="font-medium">{badge.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TEAM */}
-      <section id="команда" className="px-6 md:px-12 py-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16">
-            <p className="text-xs font-golos tracking-[0.3em] text-muted-foreground uppercase mb-3">Люди</p>
-            <h2 className="font-cormorant text-5xl md:text-6xl font-light">Команда</h2>
+      {/* FAQ */}
+      <section className="px-6 md:px-12 py-24">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest text-primary uppercase mb-3">FAQ</p>
+            <h2 className="text-3xl md:text-5xl font-bold">Частые вопросы</h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {team.map((m, i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="aspect-[3/4] mb-4 rounded-sm overflow-hidden bg-card border border-border
-                  group-hover:border-[hsl(var(--gold)/0.3)] transition-all duration-300">
-                  <div className="w-full h-full flex items-center justify-center"
-                    style={{ background: `linear-gradient(135deg, hsl(20 10% ${10 + i * 2}%) 0%, hsl(20 10% ${6 + i}%) 100%)` }}>
-                    <span className="font-cormorant text-4xl font-light text-[hsl(var(--gold)/0.3)] group-hover:text-[hsl(var(--gold)/0.5)] transition-colors">
-                      {m.name.split(" ").map(n => n[0]).join("")}
-                    </span>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div
+                key={i}
+                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                  openFaq === i ? "border-primary/40 bg-primary/5" : "border-border bg-card"
+                }`}
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between gap-4 p-6 text-left"
+                >
+                  <span className="font-semibold text-base">{faq.q}</span>
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    openFaq === i ? "bg-primary text-primary-foreground rotate-45" : "bg-muted text-muted-foreground"
+                  }`}>
+                    <Icon name="Plus" size={16} />
                   </div>
-                </div>
-                <h3 className="font-golos font-medium text-sm text-foreground mb-0.5">{m.name}</h3>
-                <p className="text-xs text-muted-foreground">{m.role}</p>
-                <p className="text-xs text-gold mt-1">{m.exp}</p>
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 pb-6">
+                    <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -276,131 +534,56 @@ export default function Index() {
       </section>
 
       {/* CTA BANNER */}
-      <section className="px-6 md:px-12 py-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="border border-[hsl(var(--gold)/0.25)] rounded-sm px-8 md:px-16 py-16 text-center relative overflow-hidden"
-            style={{ background: "radial-gradient(ellipse at center, hsl(42 60% 60% / 0.05) 0%, transparent 70%)" }}>
-            <h2 className="font-cormorant text-4xl md:text-6xl font-light mb-6">
-              Готовы создать<br /><em className="text-gold">нечто выдающееся?</em>
-            </h2>
-            <p className="text-muted-foreground font-golos mb-10 max-w-md mx-auto">
-              Расскажите о вашем проекте — мы ответим в течение 24 часов с конкретными идеями.
-            </p>
-            <a href="#контакт"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[hsl(var(--gold))] text-background font-golos font-medium
-                hover:bg-[hsl(var(--gold-light))] transition-all duration-300 rounded-sm">
-              Начать проект <Icon name="ArrowRight" size={16} />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTACT */}
-      <section id="контакт" className="px-6 md:px-12 py-24">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
-          <div>
-            <p className="text-xs font-golos tracking-[0.3em] text-muted-foreground uppercase mb-3">Связаться</p>
-            <h2 className="font-cormorant text-5xl md:text-6xl font-light leading-tight mb-8">
-              Давайте<br /><em className="text-gold">поговорим</em>
-            </h2>
-            <div className="space-y-6 mb-10">
-              {[
-                { icon: "Mail", label: "Email", value: "hello@forma.agency" },
-                { icon: "Phone", label: "Телефон", value: "+7 (495) 000-00-00" },
-                { icon: "MapPin", label: "Адрес", value: "Москва, Большая Никитская, 22" },
-              ].map((c) => (
-                <div key={c.label} className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center flex-shrink-0">
-                    <Icon name={c.icon} size={15} className="text-gold" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground font-golos mb-0.5">{c.label}</div>
-                    <div className="text-sm font-golos text-foreground">{c.value}</div>
-                  </div>
-                </div>
-              ))}
+      <section className="px-6 md:px-12 py-24">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="relative overflow-hidden rounded-3xl p-12 md:p-16 bg-primary">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20"
+                style={{ background: "radial-gradient(circle, white 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
             </div>
-            <div className="flex gap-4">
-              {[
-                { icon: "Send", label: "Telegram" },
-                { icon: "MessageCircle", label: "WhatsApp" },
-                { icon: "Instagram", label: "Instagram" },
-              ].map((s) => (
-                <button key={s.label}
-                  className="w-10 h-10 rounded-full border border-border flex items-center justify-center
-                    hover:border-[hsl(var(--gold)/0.5)] hover:bg-[hsl(var(--gold)/0.06)] transition-all duration-300">
-                  <Icon name={s.icon} size={15} className="text-muted-foreground hover:text-gold" />
-                </button>
-              ))}
+            <div className="relative">
+              <p className="text-primary-foreground/70 text-sm font-semibold tracking-widest uppercase mb-4">Пора действовать</p>
+              <h2 className="text-3xl md:text-5xl font-bold text-primary-foreground mb-6 leading-tight">
+                Готовы найти свой город?
+              </h2>
+              <p className="text-primary-foreground/80 text-lg mb-10 max-w-xl mx-auto">
+                Заполните анкету за 2 минуты и получите 3 лучших города под ваши критерии
+              </p>
+              <Link
+                to="/anketa"
+                className="inline-flex items-center gap-2 px-10 py-4 bg-primary-foreground text-primary font-bold rounded-xl hover:bg-primary-foreground/90 transition-all duration-200 text-base hover:-translate-y-0.5 shadow-xl"
+              >
+                <Icon name="ClipboardList" size={18} />
+                Заполнить анкету
+              </Link>
             </div>
           </div>
-
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-            <div>
-              <label className="text-xs font-golos tracking-widest text-muted-foreground uppercase block mb-2">Имя</label>
-              <input
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Ваше имя"
-                className="w-full bg-card border border-border rounded-sm px-4 py-3 text-sm font-golos text-foreground
-                  placeholder:text-muted-foreground focus:outline-none focus:border-[hsl(var(--gold)/0.5)]
-                  transition-colors duration-200"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-golos tracking-widest text-muted-foreground uppercase block mb-2">Email</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                placeholder="your@email.com"
-                className="w-full bg-card border border-border rounded-sm px-4 py-3 text-sm font-golos text-foreground
-                  placeholder:text-muted-foreground focus:outline-none focus:border-[hsl(var(--gold)/0.5)]
-                  transition-colors duration-200"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-golos tracking-widest text-muted-foreground uppercase block mb-2">Сообщение</label>
-              <textarea
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                placeholder="Расскажите о вашем проекте..."
-                rows={5}
-                className="w-full bg-card border border-border rounded-sm px-4 py-3 text-sm font-golos text-foreground
-                  placeholder:text-muted-foreground focus:outline-none focus:border-[hsl(var(--gold)/0.5)]
-                  transition-colors duration-200 resize-none"
-              />
-            </div>
-            <button type="submit"
-              className="w-full py-4 bg-[hsl(var(--gold))] text-background font-golos font-medium text-sm
-                hover:bg-[hsl(var(--gold-light))] transition-all duration-300 rounded-sm flex items-center justify-center gap-2">
-              Отправить заявку <Icon name="Send" size={15} />
-            </button>
-          </form>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-border px-6 md:px-12 py-8">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-cormorant text-xl font-semibold tracking-widest text-gold">FORMA</span>
-          <p className="text-xs text-muted-foreground font-golos">© 2024 FORMA Digital Agency. Все права защищены.</p>
-          <div className="flex gap-6 text-xs font-golos text-muted-foreground">
-            <a href="#" className="hover-line hover:text-foreground transition-colors">Политика конфиденциальности</a>
-            <a href="#" className="hover-line hover:text-foreground transition-colors">Оферта</a>
+      <footer className="px-6 md:px-12 py-12 border-t border-border">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+              <Icon name="MapPin" size={13} className="text-primary-foreground" />
+            </div>
+            <span className="font-bold text-foreground">ПереездPro</span>
           </div>
+          <div className="flex flex-col sm:flex-row items-center gap-6 text-sm text-muted-foreground">
+            <a href="mailto:hello@pereezdpro.ru" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Icon name="Mail" size={14} />
+              hello@pereezdpro.ru
+            </a>
+            <a href="https://t.me/pereezdpro" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Icon name="Send" size={14} />
+              Telegram
+            </a>
+            <a href="#" className="hover:text-foreground transition-colors">Политика конфиденциальности</a>
+          </div>
+          <p className="text-xs text-muted-foreground">© 2024 ПереездPro</p>
         </div>
       </footer>
-
-      <style>{`
-        @keyframes scrollLine {
-          0% { top: -40%; opacity: 1; }
-          100% { top: 140%; opacity: 0; }
-        }
-        .text-gold { color: hsl(42, 60%, 60%); }
-        .font-cormorant { font-family: 'Cormorant', serif; }
-        .font-golos { font-family: 'Golos Text', sans-serif; }
-      `}</style>
     </div>
   );
 }
