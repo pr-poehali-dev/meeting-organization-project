@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import MapBackground from "@/components/MapBackground";
 
 const problems = [
   {
@@ -164,13 +165,8 @@ export default function Index() {
 
       {/* HERO */}
       <section className="relative min-h-screen flex items-center justify-center px-6 md:px-12 pt-20">
-        {/* Background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-4xl rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.07) 0%, transparent 70%)" }} />
-          <div className="absolute bottom-0 left-0 right-0 h-32"
-            style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--background)))" }} />
-        </div>
+        {/* Background — карта РБ и РФ с самолётом */}
+        <MapBackground />
 
         <div className="relative text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8">
